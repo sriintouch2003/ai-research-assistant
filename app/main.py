@@ -21,24 +21,26 @@ class SummarizationRequest(BaseModel):
     prompt: str
     query: str
 
-@app.get("/api/")
+@app.get("/")
 def home():
     return {"message": "Welcome to the AI Research API"}
 
-@app.post("/api/openai/")
+@app.post("/openai/")
 def openai_endpoint(request: SummarizationRequest):
     result = summarize_text(request.prompt, request.query)
     return {"response": result}
 
-@app.get("/api/serper/")
+@app.get("/serper/")
 def serper_endpoint(query: Query):
     query = query.query
     result = search(query)
     return {"results": result}
 
-@app.post("/api/research")
+@app.post("/research")
 def researchAgent(query: Query):
     query = query.query
     content = agent({"input": query})
     actual_content = content["output"]
     return actual_content
+
+app.mount("/api", app)
